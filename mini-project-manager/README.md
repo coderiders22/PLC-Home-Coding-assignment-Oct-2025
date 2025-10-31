@@ -69,14 +69,14 @@ Smart Scheduler (extra)
 - Output: `{ "recommendedOrder": string[] }`
 
 ## Getting Started
-Backend
+Backend 
 ```bash
 cd backend
 dotnet restore
 dotnet run   # http://localhost:5000
 ```
 
-Frontend
+Frontend 
 ```bash
 cd frontend
 npm install
@@ -86,16 +86,16 @@ npm run dev  # http://localhost:5173
 
 Login flow: Register → redirected to Login (success banner) → Login → Dashboard.
 
-## Env Vars
+## Env Vars Local
 Frontend `.env.local`
 - `VITE_API_BASE` (default http://localhost:5000)
 
 ## Deployment Notes
 
 ### Live Demo Links
-- Deployment Link : https://your-vercel-frontend.vercel.app  
+- Deployment Link : https://miniprojectmanager.vercel.app/ 
 - Backend (Render): https://mini-project-manager-7fsq.onrender.com 
-- Frontend (Vercel): https://your-vercel-frontend.vercel.app  
+- Frontend (Vercel): https://miniprojectmanager.vercel.app/ 
 
 ### Steps
 1) Deploy backend on Render
@@ -105,7 +105,7 @@ Frontend `.env.local`
 2) Deploy frontend on Vercel
    - Import the repo, select `frontend/` as the project directory
    - Build Command: `npm run build`, Output: `dist`
-   - Environment Variable: `VITE_API_BASE` → your Render backend URL
+   - Environment Variable: `VITE_API_BASE` → https://mini-project-manager-7fsq.onrender.com 
 3) Post‑deploy
    - Verify `GET /api/projects` works with Authorization header locally and from the deployed frontend
    - Update the Live Demo links above
