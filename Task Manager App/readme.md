@@ -7,8 +7,8 @@ TaskForge empowers users to plan, track, and complete their tasks efficiently �
 
 ## 🔗 Live Demo
 
-- **Deployed App:** [https://your-deployment-url.com](https://your-deployment-url.com)
-  - Replace the above with your actual deployment URL once available.
+- **Deployed App:** [https://basictaskmanager.vercel.app/](https://basictaskmanager.vercel.app/)
+
 
 ---
 
@@ -192,18 +192,20 @@ curl -X POST http://localhost:5000/api/tasks \
 
 ## 🚀 Deployment
 
-- **Frontend (Vercel/Netlify):**
+- **Frontend (Vercel):**
   - Build command: `npm run build`
   - Publish directory: `frontend/build`
-  - Environment: set `VITE_API_BASE_URL` to your backend URL
+  
 
-- **Backend (Render/Azure/Heroku):**
+- **Backend (Render):**
   - Build & run: `dotnet publish -c Release`
   - Expose the generated executable or `TaskManagerAPI.dll`
   - Enable CORS for the frontend origin
 
 - Once both are deployed, update the link in the **Live Demo** section:
-  - Example: `https://plc-taskforge.vercel.app` or your chosen domain
+  - Deployment Link: `https://basictaskmanager.vercel.app/` 
+  - Vercel (Frontend): `https://basictaskmanager.vercel.app/` 
+  - Render (Backend): `https://basic-task-manager-9f0x.onrender.com` 
 
 ---
 
