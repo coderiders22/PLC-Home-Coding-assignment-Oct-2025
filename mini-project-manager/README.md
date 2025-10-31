@@ -2,6 +2,20 @@
 
 A responsive full‑stack mini project manager with JWT auth, clean UI and several enhancements to impress reviewers.
 
+
+---
+
+## 🔗 Deployment Details
+
+- **Live App (Integrated):** [https://miniprojectmanager.vercel.app/](https://miniprojectmanager.vercel.app/ )
+
+## 🔗 Frontend and Backend Deployed Link
+- **Vercel (Frontend):** `https://miniprojectmanager.vercel.app/` 
+- Render (Backend): ` https://mini-project-manager-7fsq.onrender.com ` 
+
+---
+
+
 ## Table of Contents
 - Overview
 - Screenshots
