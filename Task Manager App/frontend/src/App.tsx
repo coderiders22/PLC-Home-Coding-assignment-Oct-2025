@@ -8,11 +8,12 @@ interface Task {
   description?: string; // Optional notes/description
   isCompleted: boolean;
   dueDate?: string;
+  createdAt: string; // ISO date when created
 }
 
 interface Notification {
   id: string;
-  type: "create" | "update" | "delete" | "overdue" | "error";
+  type: "create" | "update" | "delete" | "overdue" | "warning" | "error";
   message: string;
   taskName?: string;
 }
@@ -23,7 +24,7 @@ export default function App() {
   const [title, setTitle] = useState(""); // Renamed from desc
   const [notes, setNotes] = useState(""); // New: for description/notes
   const [due, setDue] = useState("");
-  const [filter, setFilter] = useState<"all" | "active" | "completed" | "overdue">("all");
+  const [filter, setFilter] = useState<"all" | "active" | "completed" | "overdue" | "latest">("all");
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editTitle, setEditTitle] = useState(""); // Renamed
@@ -32,6 +33,8 @@ export default function App() {
   const [showWelcome, setShowWelcome] = useState(false); // Always show on mount
   const [showHelp, setShowHelp] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const notifiedOverdueIdsRef = useRef<Set<number>>(new Set());
+  const notifiedSoonIdsRef = useRef<Set<number>>(new Set());
   const [showImport, setShowImport] = useState(false);
   const [isFirstVisit, setIsFirstVisit] = useState(false); // Not used now
   const inputRef = useRef<HTMLInputElement>(null);
@@ -90,13 +93,14 @@ export default function App() {
   };
 
   // Add notification (updated for error type)
-  const addNotification = (type: "create" | "update" | "delete" | "overdue" | "error", taskName?: string) => {
+  const addNotification = (type: "create" | "update" | "delete" | "overdue" | "warning" | "error", taskName?: string) => {
     const id = Date.now().toString();
     const messages = {
       create: `Task "${taskName}" created successfully!`,
       update: `Task "${taskName}" updated!`,
       delete: `Task "${taskName}" deleted!`,
       overdue: `Task "${taskName}" is overdue!`,
+      warning: `Task "${taskName}" is due soon!`,
       error: `Task title is required! Please add a title to create the task.`
     };
 
@@ -182,7 +186,8 @@ export default function App() {
                 title: parsed.title,
                 description: parsed.description, // Keep description as is
                 isCompleted: parsed.isCompleted,
-                dueDate: parsed.dueDate
+                dueDate: parsed.dueDate,
+                createdAt: parsed.createdAt || new Date().toISOString() // Ensure createdAt is present
               };
             } else {
               // Old format: map description to title
@@ -191,7 +196,8 @@ export default function App() {
                 title: parsed.description || "Untitled",
                 description: undefined,
                 isCompleted: parsed.isCompleted,
-                dueDate: parsed.dueDate
+                dueDate: parsed.dueDate,
+                createdAt: parsed.createdAt || new Date().toISOString() // Ensure createdAt is present
               };
             }
             loadedTasks.push(task);
@@ -224,7 +230,8 @@ export default function App() {
                       title: parsed.title,
                       description: parsed.description,
                       isCompleted: parsed.isCompleted,
-                      dueDate: parsed.dueDate
+                      dueDate: parsed.dueDate,
+                      createdAt: parsed.createdAt || new Date().toISOString() // Ensure createdAt is present
                     };
                   } else {
                     // Old format
@@ -233,7 +240,8 @@ export default function App() {
                       title: parsed.description || "Untitled",
                       description: undefined,
                       isCompleted: parsed.isCompleted,
-                      dueDate: parsed.dueDate
+                      dueDate: parsed.dueDate,
+                      createdAt: parsed.createdAt || new Date().toISOString() // Ensure createdAt is present
                     };
                   }
                   if (task.id === id) {
@@ -293,6 +301,7 @@ export default function App() {
       description: notes.trim() || undefined, // Optional notes
       isCompleted: false,
       dueDate: due || undefined,
+      createdAt: new Date().toISOString(),
     };
     setTasks(prev => [...prev, newTask]);
     const newIds = [...taskIds, newTask.id].sort((a, b) => a - b);
@@ -384,19 +393,54 @@ export default function App() {
       return true;
     })
     .sort((a, b) => {
-      const aDue = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
-      const bDue = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
-      return aDue - bDue;
+      if (filter === "latest") {
+        const aCreated = a.createdAt ? new Date(a.createdAt).getTime() : a.id;
+        const bCreated = b.createdAt ? new Date(b.createdAt).getTime() : b.id;
+        return bCreated - aCreated; // newest first
+      } else {
+        const aDue = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
+        const bDue = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
+        return aDue - bDue;
+      }
     });
 
   const completed = tasks.filter((t) => t.isCompleted).length;
   const total = tasks.length;
   const percent = total ? Math.round((completed / total) * 100) : 0;
+  const overdueCount = tasks.filter((t) => !t.isCompleted && t.dueDate && new Date(t.dueDate) < now).length;
+  const activeCount = tasks.filter((t) => !t.isCompleted && (!t.dueDate || new Date(t.dueDate) >= now)).length;
+  const new24hCount = tasks.filter((t) => {
+    const createdMs = t.createdAt ? new Date(t.createdAt).getTime() : t.id;
+    return Date.now() - createdMs <= 24 * 60 * 60 * 1000;
+  }).length;
 
   const isOverdue = (task: Task) => {
     const dueDate = task.dueDate ? new Date(task.dueDate) : null;
     return !task.isCompleted && dueDate && dueDate < now;
   };
+
+  // Notify on overdue and due-soon (within next 24 hours) once per task
+  useEffect(() => {
+    const soonWindowMs = 24 * 60 * 60 * 1000; // 24h
+    const nowTs = Date.now();
+    tasks.forEach((t) => {
+      if (!t.dueDate || t.isCompleted) return;
+      const dueTs = new Date(t.dueDate).getTime();
+      if (dueTs < nowTs) {
+        if (!notifiedOverdueIdsRef.current.has(t.id)) {
+          addNotification("overdue", t.title);
+          notifiedOverdueIdsRef.current.add(t.id);
+        }
+      } else if (dueTs - nowTs <= soonWindowMs) {
+        const createdAgoMs = nowTs - t.id; // id is Date.now() at creation
+        if (createdAgoMs < 10000) return; // grace: 10s after create
+        if (!notifiedSoonIdsRef.current.has(t.id)) {
+          addNotification("warning", t.title);
+          notifiedSoonIdsRef.current.add(t.id);
+        }
+      }
+    });
+  }, [tasks]);
 
   const closeWelcome = () => {
     // No localStorage now - just hide
@@ -459,14 +503,15 @@ export default function App() {
                 {[
                   { icon: Plus, title: "Add New Tasks", desc: "Type a title and optional notes/description in the input field. Press Enter or click Add to create a task instantly." },
                   { icon: CheckCircle, title: "Smart Task Completion", desc: "Click the circle next to a task to mark it complete. Completed tasks show a line-through and are counted in progress." },
-                  { icon: Calendar, title: "Due Dates & Overdue Alerts", desc: "Set due dates when adding tasks. Overdue tasks (uncompleted past due date) get a red badge and filter." },
+                  { icon: Calendar, title: "Due Dates, Overdue & Due‑Soon", desc: "Set due dates. Overdue tasks show a red badge with center notification; tasks due within 24h trigger a gentle 'due soon' reminder." },
                   { icon: Edit2, title: "Edit Tasks", desc: "Hover on a task and click the edit icon (pencil) to modify title, notes, or due date. Save or cancel changes." },
                   { icon: Trash2, title: "Delete Tasks", desc: "Hover and click the trash icon to remove a task permanently. Confirmation via notification." },
-                  { icon: TrendingUp, title: "Progress Tracking", desc: "See your completion percentage with a dynamic progress bar. Filters help view active, completed, or overdue tasks." },
+                  { icon: TrendingUp, title: "Progress & Live Counts", desc: "Dynamic progress bar plus quick chips for Active, Overdue, Completed, and New (24h)." },
                   { icon: Filter, title: "Task Filters", desc: "Use buttons below input to view All, Active, Completed, or Overdue tasks. Sorts by due date automatically." },
+                  { icon: Bolt, title: "Latest View + Created Time", desc: "Every task shows its 'Created' date/time. Use the 'Latest' filter to see most recently added tasks first." },
                   { icon: Download, title: "Backup & Restore", desc: "Export all data as JSON (download icon) for backup. Import from file (upload icon) to restore across devices." },
                   { icon: Sun, title: "Theme Switch", desc: "Toggle between light and dark mode using the sun/moon icon in the header. Persists across sessions." },
-                  { icon: Zap, title: "Real-time Notifications", desc: "Get instant animated feedback for task creation, updates, deletions, and overdue alerts right in the center of your screen." },
+                  { icon: Zap, title: "Real-time Notifications", desc: "Instant feedback for create, update, delete, due‑soon, and overdue — shown center‑screen with soft animations." },
                   { icon: HelpCircle, title: "Help Guide", desc: "Click the help icon (?) in the dashboard header anytime for a quick modal with all feature reminders and tips." }
                 ].map((feature, idx) => (
                   <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 + idx * 0.1 }} className={`backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all ${
@@ -536,7 +581,7 @@ export default function App() {
       {/* Notifications - Center Screen (updated for error) */}
       <div className="fixed inset-0 z-40 pointer-events-none flex items-center justify-center">
         <AnimatePresence>
-          {notifications.map((notif) => (
+          {[...notifications.slice(-1)].map((notif) => (
             <motion.div
               key={notif.id}
               initial={{ opacity: 0, scale: 0.8, y: -50 }}
@@ -560,6 +605,10 @@ export default function App() {
                   ? theme === "dark"
                     ? "bg-yellow-500/20 border-yellow-400/30"
                     : "bg-yellow-100/90 border-yellow-300"
+                  : notif.type === "warning"
+                  ? theme === "dark"
+                    ? "bg-amber-500/20 border-amber-400/30"
+                    : "bg-amber-100/90 border-amber-300"
                   : notif.type === "error"
                   ? theme === "dark"
                     ? "bg-red-500/20 border-red-400/30"
@@ -593,6 +642,10 @@ export default function App() {
                       ? theme === "dark"
                         ? "text-yellow-300"
                         : "text-yellow-700"
+                      : notif.type === "warning"
+                      ? theme === "dark"
+                        ? "text-amber-300"
+                        : "text-amber-700"
                       : notif.type === "error"
                       ? theme === "dark"
                         ? "text-red-300"
@@ -618,13 +671,17 @@ export default function App() {
                       ? theme === "dark"
                         ? "text-yellow-200/70"
                         : "text-yellow-600/70"
+                      : notif.type === "warning"
+                      ? theme === "dark"
+                        ? "text-amber-200/70"
+                        : "text-amber-600/70"
                       : notif.type === "error"
                       ? theme === "dark"
                         ? "text-red-200/70"
                         : "text-red-600/70"
                       : ""
                   }`}>
-                    {notif.type === "create" ? "Task added to your workspace" : notif.type === "update" ? "Task has been updated" : notif.type === "delete" ? "Task removed from workspace" : notif.type === "overdue" ? "This task needs attention" : notif.type === "error" ? "Title is mandatory to create or update tasks." : ""}
+                    {notif.type === "create" ? "Task added to your workspace" : notif.type === "update" ? "Task has been updated" : notif.type === "delete" ? "Task removed from workspace" : notif.type === "overdue" ? "This task is overdue" : notif.type === "warning" ? "Due soon — plan accordingly" : notif.type === "error" ? "Title is mandatory to create or update tasks." : ""}
                   </p>
                 </div>
               </div>
@@ -762,6 +819,12 @@ export default function App() {
           <p className={`text-sm mt-3 ${
             theme === "dark" ? "text-slate-400" : "text-slate-600"
           }`}>{completed} of {total} tasks completed</p>
+          <div className="flex gap-2 mt-3 flex-wrap">
+            <span className={`text-xs px-3 py-1 rounded-full border ${theme === "dark" ? "bg-white/10 border-white/20 text-slate-200" : "bg-white/80 border-white/50 text-slate-700"}`}>Active: {activeCount}</span>
+            <span className={`text-xs px-3 py-1 rounded-full border ${theme === "dark" ? "bg-white/10 border-white/20 text-yellow-300" : "bg-white/80 border-white/50 text-yellow-700"}`}>Overdue: {overdueCount}</span>
+            <span className={`text-xs px-3 py-1 rounded-full border ${theme === "dark" ? "bg-white/10 border-white/20 text-green-300" : "bg-white/80 border-white/50 text-green-700"}`}>Completed: {completed}</span>
+            <span className={`text-xs px-3 py-1 rounded-full border ${theme === "dark" ? "bg-white/10 border-white/20 text-indigo-300" : "bg-white/80 border-white/50 text-indigo-700"}`}>New (24h): {new24hCount}</span>
+          </div>
         </motion.div>
 
         {/* Input Section - Updated with Title + Notes */}
@@ -832,7 +895,7 @@ export default function App() {
 
         {/* Filter Buttons */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="flex justify-center gap-2 sm:gap-3 mb-8 sm:mb-10 flex-wrap">
-          {(["all", "active", "completed", "overdue"] as const).map((f) => (
+          {(["all", "active", "completed", "overdue", "latest"] as const).map((f) => (
             <motion.button 
               key={f} 
               onClick={() => setFilter(f)} 
@@ -845,9 +908,12 @@ export default function App() {
                   ? "bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 hover:border-white/20"
                   : "bg-white/60 text-slate-700 border border-white/40 hover:bg-white/80 shadow-sm"
               }`}
-              title={`Filter: ${f === "all" ? "Show all tasks" : f === "active" ? "Show pending tasks (not overdue)" : f === "completed" ? "Show completed tasks" : "Show overdue tasks"}`}
+              title={`Filter: ${f === "all" ? "Show all tasks" : f === "active" ? "Show pending tasks (not overdue)" : f === "completed" ? "Show completed tasks" : f === "overdue" ? "Show overdue tasks" : "Show latest created first"}`}
             >
               {f.charAt(0).toUpperCase() + f.slice(1)}
+              <span className="ml-1 opacity-80">
+                {f === "all" ? `(${total})` : f === "active" ? `(${activeCount})` : f === "completed" ? `(${completed})` : f === "overdue" ? `(${overdueCount})` : `(${total})`}
+              </span>
             </motion.button>
           ))}
         </motion.div>
@@ -990,6 +1056,9 @@ export default function App() {
                               {new Date(t.dueDate).toLocaleDateString()} • {new Date(t.dueDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                             </p>
                           )}
+                          <p className={`text-[11px] sm:text-xs mt-1 ${theme === "dark" ? "text-slate-500" : "text-slate-500"}`}>
+                            Created: {new Date(t.createdAt || t.id).toLocaleDateString()} {new Date(t.createdAt || t.id).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                          </p>
                         </div>
                       </div>
                     )}
