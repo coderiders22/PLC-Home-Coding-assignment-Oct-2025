@@ -1,4 +1,4 @@
-# ⚡ TaskForge – Smart Task Management App
+# ⚡ TaskForge – Smart Tasks Management App
 
 **A modern, full-stack task management system built using .NET (C#) and React + TypeScript with Tailwind CSS.**
 TaskForge empowers users to plan, track, and complete their tasks efficiently — all inside a sleek, animated, and intelligent productivity dashboard.
