@@ -4,12 +4,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Copy the entire backend source and restore
+# Copy the entire backend source
 COPY . .
-RUN dotnet restore "TaskManagerAPI.csproj"
 
-# Publish to a framework-dependent directory
-RUN dotnet publish -c Release -o /app/out "TaskManagerAPI.csproj"
+# Publish (includes restore) using explicit path
+RUN dotnet publish ./TaskManagerAPI.csproj -c Release -o /app/out
 
 # ---------- Runtime stage ----------
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
