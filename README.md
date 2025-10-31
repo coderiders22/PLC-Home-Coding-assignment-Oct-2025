@@ -68,5 +68,4 @@ GitHub: [github.com/coderiders22](https://github.com/coderiders22)
 ---
 
 ## 📄 License
-
-MIT © 2025 Manav Rai
+ © 2025 Manav Rai
