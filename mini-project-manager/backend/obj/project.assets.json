@@ -561,11 +561,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/manavrai/Documents/GitHub/mini-project-manager/backend/MiniProjectManager.csproj",
+      "projectUniqueName": "/Users/manavrai/Documents/GitHub/PLC-Home-Coding-assignment-Oct-2025/mini-project-manager/backend/MiniProjectManager.csproj",
       "projectName": "MiniProjectManager",
-      "projectPath": "/Users/manavrai/Documents/GitHub/mini-project-manager/backend/MiniProjectManager.csproj",
+      "projectPath": "/Users/manavrai/Documents/GitHub/PLC-Home-Coding-assignment-Oct-2025/mini-project-manager/backend/MiniProjectManager.csproj",
       "packagesPath": "/Users/manavrai/.nuget/packages/",
-      "outputPath": "/Users/manavrai/Documents/GitHub/mini-project-manager/backend/obj/",
+      "outputPath": "/Users/manavrai/Documents/GitHub/PLC-Home-Coding-assignment-Oct-2025/mini-project-manager/backend/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/manavrai/.nuget/NuGet/NuGet.Config"

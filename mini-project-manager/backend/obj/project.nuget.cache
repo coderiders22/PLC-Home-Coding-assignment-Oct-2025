@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "aG/yDGHUjc8=",
+  "dgSpecHash": "FJFRo/VU/tA=",
   "success": true,
-  "projectFilePath": "/Users/manavrai/Documents/GitHub/mini-project-manager/backend/MiniProjectManager.csproj",
+  "projectFilePath": "/Users/manavrai/Documents/GitHub/PLC-Home-Coding-assignment-Oct-2025/mini-project-manager/backend/MiniProjectManager.csproj",
   "expectedPackageFiles": [
     "/Users/manavrai/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/8.0.0/microsoft.aspnetcore.authentication.jwtbearer.8.0.0.nupkg.sha512",
     "/Users/manavrai/.nuget/packages/microsoft.extensions.apidescription.server/8.0.0/microsoft.extensions.apidescription.server.8.0.0.nupkg.sha512",
@@ -24,9 +24,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'System.IdentityModel.Tokens.Jwt' 7.0.3 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-59j7-ghrg-fj52",
-      "projectPath": "/Users/manavrai/Documents/GitHub/mini-project-manager/backend/MiniProjectManager.csproj",
+      "projectPath": "/Users/manavrai/Documents/GitHub/PLC-Home-Coding-assignment-Oct-2025/mini-project-manager/backend/MiniProjectManager.csproj",
       "warningLevel": 1,
-      "filePath": "/Users/manavrai/Documents/GitHub/mini-project-manager/backend/MiniProjectManager.csproj",
+      "filePath": "/Users/manavrai/Documents/GitHub/PLC-Home-Coding-assignment-Oct-2025/mini-project-manager/backend/MiniProjectManager.csproj",
       "libraryId": "System.IdentityModel.Tokens.Jwt",
       "targetGraphs": [
         "net8.0"
