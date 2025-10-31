@@ -93,7 +93,7 @@ Frontend `.env.local`
 ## Deployment Notes
 
 ### Live Demo Links
-- Deployment Link : https://miniprojectmanager.vercel.app/ 
+- Final Deployment Link : https://miniprojectmanager.vercel.app/ 
 - Backend (Render): https://mini-project-manager-7fsq.onrender.com 
 - Frontend (Vercel): https://miniprojectmanager.vercel.app/ 
 
