@@ -4,15 +4,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Copy csproj first to leverage Docker layer caching
-COPY TaskManagerAPI.csproj ./
-RUN dotnet restore
-
-# Copy the rest of the source
+# Copy the entire backend source and restore
 COPY . .
+RUN dotnet restore "TaskManagerAPI.csproj"
 
 # Publish to a framework-dependent directory
-RUN dotnet publish -c Release -o /app/out
+RUN dotnet publish -c Release -o /app/out "TaskManagerAPI.csproj"
 
 # ---------- Runtime stage ----------
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
