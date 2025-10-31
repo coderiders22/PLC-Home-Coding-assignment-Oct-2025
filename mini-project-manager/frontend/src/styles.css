@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@layer base {
+  html { font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+  body { @apply bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased; }
+}
+
+@layer utilities {
+  .drop-shadow-neon { filter: drop-shadow(0 0 10px rgba(99,102,241,0.6)); }
+
+  .skeleton {
+    background: linear-gradient(90deg, rgba(148,163,184,0.15) 25%, rgba(148,163,184,0.3) 37%, rgba(148,163,184,0.15) 63%);
+    background-size: 700px 100%;
+    animation: shimmer 1.8s infinite linear;
+  }
+}
