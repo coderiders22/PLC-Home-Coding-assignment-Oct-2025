@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE;
+const API_BASE = import.meta.env.VITE_API_BASE ||  "https://mini-project-manager-7fsq.onrender.com" ;
 
 export function setApiBase(url: string) {
   (window as any).API_BASE = url;
