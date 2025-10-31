@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PLC Coding Assignment – Project Hub</title>
+    <meta name="description" content="Two polished demos by Manav Rai: Task Manager and Mini Project Manager (JWT, Smart Scheduler)." />
+    <meta name="theme-color" content="#eef2ff" />
+    <link rel="icon" href="./favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="./favicon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Project Hub – Task Manager & Mini Project Manager" />
+    <meta property="og:description" content="Clean .NET + React/TS demos by Manav Rai. Explore the live apps." />
+    <meta property="og:image" content="https://raw.githubusercontent.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/main/logo.png" />
+    <meta property="og:url" content="https://plc-project-hub.vercel.app/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Project Hub – Task Manager & Mini Project Manager" />
+    <meta name="twitter:description" content="Clean .NET + React/TS demos by Manav Rai. Explore the live apps." />
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/main/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg-1: 255, 183, 197;
+        --bg-2: 165, 180, 252;
+        --bg-3: 152, 233, 255;
+        --glass-bg: 255, 255, 255;
+        --text: 15, 23, 42;
+        --muted: 71, 85, 105;
+        --border: 226, 232, 240;
+        --shadow: 15, 23, 42;
+        --card-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        --focus: 99, 102, 241;
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body { margin: 0; font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; color: rgb(var(--text)); background:
+          radial-gradient(1200px 800px at 15% 10%, rgba(var(--bg-1), 0.35) 0%, transparent 60%),
+          radial-gradient(1000px 700px at 85% 20%, rgba(var(--bg-2), 0.35) 0%, transparent 60%),
+          radial-gradient(900px 700px at 50% 90%, rgba(var(--bg-3), 0.35) 0%, transparent 60%),
+          linear-gradient(160deg, #ffffff 0%, #eef2ff 100%); overflow-x: hidden; }
+      .grain { position: fixed; inset: 0; pointer-events: none; opacity: 0.06; mix-blend-mode: multiply; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.5"/></svg>'); background-size: cover; animation: grain 12s steps(10) infinite; }
+      @keyframes grain { 0% { transform: translate(0,0); } 100% { transform: translate(-8%, -8%);} }
+      header { max-width: 1080px; margin: 0 auto; padding: 28px 24px 8px; text-align: center; }
+      .logo { max-width: 420px; width: 92%; height: auto; border-radius: 0; box-shadow: none; object-fit: contain; display: block; margin: 0 auto 10px; transition: transform .25s ease; }
+      .logo:hover { transform: scale(1.01); }
+      .badge { display: inline-flex; gap: 8px; align-items: center; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,0.85); border: 1px solid rgba(var(--border), 1); backdrop-filter: blur(6px); color: rgb(var(--muted)); font-weight: 600; }
+      .title { margin: 12px 0 8px; font-size: 40px; line-height: 1.1; letter-spacing: -0.02em; font-weight: 800; color: rgb(var(--text)); }
+      .subtitle { margin: 0 auto; color: rgba(var(--muted), 0.95); max-width: 760px; font-size: 16px; }
+      main { max-width: 1080px; margin: 24px auto 56px; padding: 0 24px; }
+      .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
+      .card { grid-column: span 6; position: relative; border-radius: 18px; background: rgba(var(--glass-bg), 0.9); border: 1px solid rgba(var(--border), 1); backdrop-filter: blur(10px); box-shadow: var(--card-shadow); overflow: hidden; padding: 24px; transition: transform .25s ease, box-shadow .25s ease, background .25s ease; cursor: pointer; will-change: transform; }
+      .card:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(15, 23, 42, 0.12); }
+      .card:focus-visible { outline: 0; box-shadow: 0 0 0 4px rgba(var(--focus), .25), 0 14px 36px rgba(15, 23, 42, 0.12); }
+      .card::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(600px 200px at var(--mx,50%) -10%, rgba(99,102,241,.18), transparent 40%); transition: opacity .3s ease; opacity: 0; }
+      .card:hover::after { opacity: 1; }
+      .card h2 { margin: 0 0 10px; font-size: 22px; letter-spacing: -0.01em; color: rgb(var(--text)); display: flex; align-items: center; justify-content: space-between; }
+      .card p { margin: 0 14px 14px 0; color: rgba(var(--muted), 0.95); }
+      .links { display: flex; flex-wrap: wrap; gap: 10px; }
+      .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+      .chip { font-size: 12px; padding: 6px 10px; border-radius: 999px; background: rgba(148, 163, 184, 0.15); border: 1px solid rgba(var(--border), 1); color: rgb(var(--muted)); }
+      details { margin-top: 8px; }
+      summary { list-style: none; cursor: pointer; font-size: 12px; color: rgba(var(--muted), 0.95); }
+      summary::-webkit-details-marker { display: none; }
+      .btn { display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; font-weight: 600; text-decoration: none; transition: transform .2s ease, background .2s ease, box-shadow .2s ease; border: 1px solid rgba(var(--border), 1); }
+      .btn.primary { color: #ffffff; background: linear-gradient(135deg, #0f172a 0%, #1f2937 100%); box-shadow: 0 8px 18px rgba(2,6,23,0.20); border-color: transparent; }
+      .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(2,6,23,0.25); }
+      .btn.primary:focus-visible { outline: 0; box-shadow: 0 0 0 4px rgba(var(--focus), .35); }
+      .btn.primary.call { animation: callout 1.8s ease-in-out infinite; }
+      @keyframes callout { 0% { box-shadow: 0 0 0 0 rgba(2,6,23,0.30); transform: translateY(0) scale(1); } 50% { box-shadow: 0 0 0 12px rgba(2,6,23,0.0); transform: translateY(-2px) scale(1.012); } 100% { box-shadow: 0 0 0 0 rgba(2,6,23,0.30); transform: translateY(0) scale(1); } }
+      .btn.ghost { color: rgb(var(--text)); background: rgba(255,255,255,0.95); }
+      .btn.ghost:hover { background: #ffffff; transform: translateY(-2px); }
+      footer { max-width: 1080px; margin: 34px auto 50px; padding: 0 24px; color: rgba(var(--muted), 0.95); font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; text-align: center; }
+      .orbs { position: absolute; inset: -20%; filter: blur(36px); opacity: .45; pointer-events: none; }
+      .orb { position: absolute; width: 220px; height: 220px; border-radius: 9999px; }
+      .orb.pink { background: radial-gradient(circle at 30% 30%, rgba(255, 168, 189, .95), transparent 60%); top: -20px; left: -20px; animation: float 10s ease-in-out infinite; }
+      .orb.indigo { background: radial-gradient(circle at 60% 60%, rgba(165, 180, 252, .9), transparent 60%); bottom: -40px; right: -10px; animation: float 12s ease-in-out infinite reverse; }
+      @keyframes float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-8px) } }
+      @media (max-width: 900px) { .card { grid-column: span 12; } .title { font-size: 34px; } }
+      .toast { position: fixed; top: 18px; right: 18px; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.95); border: 1px solid rgba(var(--border),1); color: rgb(var(--text)); box-shadow: 0 10px 24px rgba(15,23,42,0.12); font-weight: 600; opacity: 0; transform: translateY(-6px); transition: opacity .4s ease, transform .4s ease; z-index: 50; }
+      .toast.show { opacity: 1; transform: translateY(0); }
+      .hint { font-size: 12px; color: rgba(var(--muted), 0.9); }
+      @media (prefers-reduced-motion: reduce) {
+        .grain, .orb, .btn.primary.call { animation: none !important; }
+        .card, .logo { transition: none !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <header>
+      <img class="logo" src="./logo.png" alt="Manav Rai wordmark" />
+      <div class="badge" aria-label="Assignment timeline">PLC Coding Assignment – Oct 2025</div>
+      <h1 class="title">Project Hub</h1>
+      <p class="subtitle">Two production‑ready demos built with .NET Web API and React + TypeScript.</p>
+    </header>
+    <main>
+      <div class="grid">
+        <section class="card" tabindex="0" role="button" aria-label="Open Task Manager App live demo" data-link="https://basictaskmanager.vercel.app/">
+          <div class="orbs" aria-hidden="true"><div class="orb pink"></div><div class="orb indigo"></div></div>
+          <h2>Task Manager App <span class="hint">Press 1 ↗</span></h2>
+          <p>Minimal, fast, and polished task tracking.</p>
+          <div class="links">
+            <a class="btn primary call" href="https://basictaskmanager.vercel.app/" target="_blank" rel="noopener" aria-label="Open Task Manager live demo">Live Demo</a>
+            <a class="btn ghost" href="Task%20Manager%20App/readme.md" target="_blank" rel="noopener" aria-label="Open Task Manager README">README</a>
+          </div>
+          <div class="chips" aria-hidden="true">
+            <span class="chip">Inline Edit</span>
+            <span class="chip">Progress Bar</span>
+            <span class="chip">Export/Import JSON</span>
+          </div>
+          <details>
+            <summary>See more highlights</summary>
+            <div class="chips">
+              <span class="chip">Smart Completion</span>
+              <span class="chip">Due Dates & Alerts</span>
+              <span class="chip">Filters</span>
+              <span class="chip">Notifications</span>
+              <span class="chip">Help Guide</span>
+            </div>
+          </details>
+          <span class="more">…and yes, there’s more to explore inside →</span>
+        </section>
+        <section class="card" tabindex="0" role="button" aria-label="Open Mini Project Manager live demo" data-link="https://miniprojectmanager.vercel.app/">
+          <div class="orbs" aria-hidden="true"><div class="orb pink"></div><div class="orb indigo"></div></div>
+          <h2>Mini Project Manager <span class="hint">Press 2 ↗</span></h2>
+          <p>Projects + tasks with JWT auth and Smart Scheduler.</p>
+          <div class="links">
+            <a class="btn primary call" href="https://miniprojectmanager.vercel.app/" target="_blank" rel="noopener" aria-label="Open Mini Project Manager live demo">Live Demo</a>
+            <a class="btn ghost" href="mini-project-manager/README.md" target="_blank" rel="noopener" aria-label="Open Mini Project Manager README">README</a>
+          </div>
+          <div class="chips" aria-hidden="true">
+            <span class="chip">JWT Auth</span>
+            <span class="chip">Bulk Add</span>
+            <span class="chip">Topological Scheduler</span>
+          </div>
+          <details>
+            <summary>See more highlights</summary>
+            <div class="chips">
+              <span class="chip">Duplicate Guard</span>
+              <span class="chip">Stats (Today/Week/Total)</span>
+              <span class="chip">Responsive UI</span>
+              <span class="chip">Per‑User Isolation</span>
+            </div>
+          </details>
+          <span class="more">…and yes, there’s more to explore inside →</span>
+        </section>
+      </div>
+    </main>
+    <footer>
+      <div>© 2025 Manav Rai · Punjab Engineering College, Chandigarh</div>
+      <a class="btn ghost" href="https://github.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025" target="_blank" rel="noopener" aria-label="View repository on GitHub">View on GitHub</a>
+    </footer>
+    <div id="greet" class="toast" role="status" aria-live="polite">Welcome! Warm greetings from Manav Rai 👋</div>
+    <script>
+      const cards = document.querySelectorAll('.card');
+      cards.forEach((card) => {
+        const link = card.getAttribute('data-link');
+        card.addEventListener('click', (e) => {
+          if ((e.target instanceof HTMLElement) && (e.target.closest('a') || e.target.tagName === 'SUMMARY')) return;
+          if (link) window.open(link, '_blank');
+        });
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (link) window.open(link, '_blank'); }
+        });
+        let raf = 0;
+        card.addEventListener('mousemove', (e) => {
+          cancelAnimationFrame(raf);
+          raf = requestAnimationFrame(() => {
+            const r = card.getBoundingClientRect();
+            const x = e.clientX - r.left; const y = e.clientY - r.top;
+            const rx = ((y - r.height / 2) / r.height) * -4;
+            const ry = ((x - r.width / 2) / r.width) * 4;
+            card.style.setProperty('--mx', `${x}px`);
+            card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+          });
+        });
+        card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+      });
+      window.addEventListener('keydown', (e) => {
+        if (e.target && e.target instanceof HTMLElement && e.target.tagName === 'INPUT') return;
+        if (e.key === '1') window.open('https://basictaskmanager.vercel.app/', '_blank');
+        if (e.key === '2') window.open('https://miniprojectmanager.vercel.app/', '_blank');
+      });
+      window.addEventListener('load', () => {
+        const t = document.getElementById('greet');
+        if (!t) return;
+        setTimeout(() => t.classList.add('show'), 300);
+        setTimeout(() => t.classList.remove('show'), 4200);
+      });
+    </script>
+    <noscript>
+      <div style="max-width:1080px;margin:24px auto;padding:0 24px;color:#0f172a;">JavaScript is disabled. Use the README links inside each card to open demos.</div>
+    </noscript>
+  </body>
+</html>
