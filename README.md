@@ -15,7 +15,7 @@ A single repository hosting two full‑stack projects built with .NET (C#) + Rea
 
 Frontend apps are fully integrated with their backends. Use the links above to explore.  
 Optional direct API references (for testing): 
-- Task Manager (Backend): [basic-task-manager-9f0x.onrender.com](https://basic-task-manager-9f0x.onrender.com), 
+- Task Manager (Backend): [basic-task-manager-9f0x.onrender.com](https://basic-task-manager-9f0x.onrender.com)
 - Mini Project Manager (Backend): [mini-project-manager-7fsq.onrender.com](https://mini-project-manager-7fsq.onrender.com)
 
 > If any link is down, please check the subproject READMEs for updated deployment info.
