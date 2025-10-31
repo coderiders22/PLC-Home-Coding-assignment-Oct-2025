@@ -3,7 +3,7 @@ import { post } from "../src/api";
 import { saveToken } from "../src/auth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogIn, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { LogIn, Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
 
 const inputVariants = {
   initial: { opacity: 0, y: 20 },
@@ -50,13 +50,23 @@ export default function Login() {
         className="bg-white/60 dark:bg-slate-800/50 backdrop-blur-md rounded-3xl p-8 w-full max-w-md border border-white/70 dark:border-slate-700 shadow-xl ring-1 ring-indigo-100"
         whileHover={{ y: -5 }}
       >
+        <div className="mb-6">
+          <Link
+            to="/"
+            className="text-indigo-600 hover:text-indigo-700 text-sm font-semibold flex items-center gap-2 transition-colors w-max"
+          >
+            <ArrowLeft size={16} /> Back to Home
+          </Link>
+        </div>
         <div className="text-center mb-8">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
-            <LogIn className="mx-auto text-indigo-600" size={48} />
+            <div className="inline-block p-3 bg-indigo-100 rounded-2xl mb-4">
+              <LogIn className="text-indigo-600" size={28} />
+            </div>
           </motion.div>
           <motion.h2 
             initial={{ opacity: 0 }}

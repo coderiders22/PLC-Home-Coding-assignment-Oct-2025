@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { get, post, put, del } from "../src/api";
-import { motion } from "framer-motion";
-import { CheckCircle2, Trash2, ArrowLeft, Plus, Filter, Search, Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { CheckCircle2, Trash2, ArrowLeft, Plus, Filter, Search, Sparkles, Pencil, X, Check } from "lucide-react";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import Card from "../components/ui/Card";
@@ -27,6 +27,9 @@ export default function ProjectPage() {
   const [scheduleResult, setScheduleResult] = useState<string[]>([]);
   const [scheduleLoading, setScheduleLoading] = useState(false);
   const [scheduleError, setScheduleError] = useState<string>("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState("");
+  const [editingDue, setEditingDue] = useState<string>("");
 
   async function load() {
     if (!id) return;
@@ -58,6 +61,25 @@ export default function ProjectPage() {
   async function remove(t: Task) {
     const res = await del(`/api/tasks/${t.id}`);
     if (res.ok || res.status === 204) load();
+  }
+
+  function beginEdit(t: Task) {
+    setEditingId(t.id);
+    setEditingTitle(t.title);
+    setEditingDue(t.dueDate ? t.dueDate.substring(0, 10) : "");
+  }
+
+  async function saveEdit() {
+    if (!editingId) return;
+    const body: any = { title: editingTitle };
+    if (editingDue) body.dueDate = editingDue;
+    const res = await put(`/api/tasks/${editingId}`, body);
+    if (res.ok) {
+      setEditingId(null);
+      setEditingTitle("");
+      setEditingDue("");
+      load();
+    }
   }
 
   return (
@@ -113,7 +135,7 @@ export default function ProjectPage() {
                   onChange={(e) => setDue(e.target.value)}
                 />
                 <Button type="submit" leftIcon={<Plus size={18} />}>Add Task</Button>
-                <Button type="button" variant="secondary" leftIcon={<Sparkles size={18} />} onClick={() => {
+                <Button type="button" variant="primary" className="btn-glow btn-pulse hover:scale-[1.03]" leftIcon={<Sparkles size={18} />} onClick={() => {
                   // prefill from current tasks only
                   if (!project) { setSchedulerOpen(true); return; }
                   setSchedulerOpen(true);
@@ -188,41 +210,75 @@ export default function ProjectPage() {
                       <CheckCircle2 size={20} />
                     </motion.button>
                     <div className="flex-1">
-                      <p
-                        className={`font-semibold ${
-                          t.completed
-                            ? "line-through text-gray-400"
-                            : "text-gray-800"
-                        }`}
-                      >
-                        {t.title}
-                      </p>
-                      {t.dueDate && (
-                        <div className="mt-1">
-                          {(() => {
-                            const dueTs = new Date(t.dueDate!).getTime();
-                            const now = Date.now();
-                            const overdue = !t.completed && dueTs < now;
-                            const soon = !t.completed && dueTs - now < 1000 * 60 * 60 * 24 * 2; // 48h
-                            return (
-                              <Badge variant={overdue ? "warning" : soon ? "info" : "neutral"}>
-                                {overdue ? "Overdue" : soon ? "Due soon" : "Due"} {new Date(t.dueDate).toLocaleDateString()}
-                              </Badge>
-                            );
-                          })()}
+                      {editingId === t.id ? (
+                        <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+                          <input
+                            value={editingTitle}
+                            onChange={(e) => setEditingTitle(e.target.value)}
+                            className="flex-1 px-3 py-2 rounded-lg border border-slate-200"
+                          />
+                          <input
+                            type="date"
+                            value={editingDue}
+                            onChange={(e) => setEditingDue(e.target.value)}
+                            className="px-3 py-2 rounded-lg border border-slate-200"
+                          />
+                          <div className="flex items-center gap-2">
+                            <button onClick={saveEdit} className="px-3 py-2 rounded-lg bg-green-600 text-white inline-flex items-center gap-1"><Check size={16}/>Save</button>
+                            <button onClick={() => setEditingId(null)} className="px-3 py-2 rounded-lg bg-slate-200 inline-flex items-center gap-1"><X size={16}/>Cancel</button>
+                          </div>
                         </div>
+                      ) : (
+                        <>
+                          <p
+                            className={`font-semibold ${
+                              t.completed
+                                ? "line-through text-gray-400"
+                                : "text-gray-800"
+                            }`}
+                          >
+                            {t.title}
+                          </p>
+                          {t.dueDate && (
+                            <div className="mt-1">
+                              {(() => {
+                                const dueTs = new Date(t.dueDate!).getTime();
+                                const now = Date.now();
+                                const overdue = !t.completed && dueTs < now;
+                                const soon = !t.completed && dueTs - now < 1000 * 60 * 60 * 24 * 2; // 48h
+                                return (
+                                  <Badge variant={overdue ? "warning" : soon ? "info" : "neutral"}>
+                                    {overdue ? "Overdue" : soon ? "Due soon" : "Due"} {new Date(t.dueDate).toLocaleDateString()}
+                                  </Badge>
+                                );
+                              })()}
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
                   </div>
 
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => setConfirm({ open: true, task: t })}
-                    className="text-red-500 hover:text-red-700 transition-colors"
-                  >
-                    <Trash2 size={20} />
-                  </motion.button>
+                  <div className="flex items-center gap-3">
+                    {editingId !== t.id && (
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => beginEdit(t)}
+                        className="text-indigo-600 hover:text-indigo-800 transition-colors"
+                      >
+                        <Pencil size={18} />
+                      </motion.button>
+                    )}
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setConfirm({ open: true, task: t })}
+                      className="text-red-500 hover:text-red-700 transition-colors"
+                    >
+                      <Trash2 size={20} />
+                    </motion.button>
+                  </div>
                 </motion.li>
               ))
             )}
@@ -272,11 +328,7 @@ export default function ProjectPage() {
                         dependencies: [] as string[],
                       }))
                     };
-                    const res = await fetch(`${import.meta.env.VITE_API_BASE || 'https://mini-project-manager-7fsq.onrender.com'}/api/v1/projects/${id}/schedule`, {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify(parsed),
-                    });
+                    const res = await post(`/api/v1/projects/${id}/schedule`, parsed);
                     if (!res.ok) {
                       const text = await res.text();
                       throw new Error(text || `Request failed (${res.status})`);
@@ -292,19 +344,69 @@ export default function ProjectPage() {
               </>
             }
           >
-            <div className="space-y-3 text-sm">
-              <p>The Smart Scheduler will generate a plan using your current tasks.</p>
+            <div className="space-y-4 text-sm">
+              <p className="flex items-center gap-2"><Sparkles className="text-indigo-600" size={18} /> The Smart Scheduler will generate a plan using your current tasks.</p>
+              <AnimatePresence mode="wait">
+                {scheduleLoading && (
+                  <motion.div
+                    key="loading"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    className="rounded-xl border border-indigo-200 bg-indigo-50 p-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <motion.div
+                        className="w-5 h-5 rounded-full border-2 border-indigo-600 border-t-transparent"
+                        animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                      />
+                      <span className="text-indigo-700 font-medium">Planning your optimal order…</span>
+                    </div>
+                    <div className="mt-3 h-2 bg-white rounded-full overflow-hidden">
+                      <motion.div
+                        className="h-full bg-gradient-to-r from-indigo-500 to-purple-600"
+                        initial={{ width: '10%' }}
+                        animate={{ width: ['15%','40%','65%','85%'] }}
+                        transition={{ duration: 2.2, repeat: Infinity, repeatType: 'mirror' }}
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {scheduleError && (
-                <div className="text-red-600 bg-red-50 border border-red-200 rounded-lg p-2">{scheduleError}</div>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-red-600 bg-red-50 border border-red-200 rounded-lg p-2">{scheduleError}</motion.div>
               )}
-              {scheduleResult.length > 0 && (
-                <div>
-                  <p className="font-semibold mb-1">Recommended order:</p>
-                  <ol className="list-decimal pl-5 space-y-1">
-                    {scheduleResult.map((s, i) => (<li key={i}>{s}</li>))}
-                  </ol>
-                </div>
-              )}
+
+              <AnimatePresence>
+                {scheduleResult.length > 0 && !scheduleLoading && (
+                  <motion.div
+                    key="result"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                  >
+                    <p className="font-semibold mb-2">Recommended order:</p>
+                    <motion.ol
+                      className="list-decimal pl-5 space-y-1"
+                      initial="hidden"
+                      animate="show"
+                      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
+                    >
+                      {scheduleResult.map((s, i) => (
+                        <motion.li
+                          key={i}
+                          className="bg-white/70 dark:bg-slate-800/60 border border-indigo-100 dark:border-slate-700 rounded-lg px-3 py-2"
+                          variants={{ hidden: { opacity: 0, y: 6 }, show: { opacity: 1, y: 0 } }}
+                        >
+                          {s}
+                        </motion.li>
+                      ))}
+                    </motion.ol>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </Modal>
         </div>
