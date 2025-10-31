@@ -1,14 +1,17 @@
-# ⚡ TaskForge – Smart Tasks Management App
+# TaskForge – Smart Tasks Management App
 
 **A modern, full-stack task management system built using .NET (C#) and React + TypeScript with Tailwind CSS.**
 TaskForge empowers users to plan, track, and complete their tasks efficiently — all inside a sleek, animated, and intelligent productivity dashboard.
 
 ---
 
-## 🔗 Live Demo
+## 🔗 Deployment Details
 
-- **Deployed App:** [https://basictaskmanager.vercel.app/](https://basictaskmanager.vercel.app/)
+- **Live App (Integrated):** [https://basictaskmanager.vercel.app/](https://basictaskmanager.vercel.app/)
 
+## 🔗 Frontend and Backend Deployed Link
+- **Vercel (Frontend):** `https://basictaskmanager.vercel.app/` 
+- Render (Backend): `https://basic-task-manager-9f0x.onrender.com` 
 
 ---
 
@@ -88,17 +91,17 @@ I personally implemented the entire frontend from scratch using React, TypeScrip
 - **Auto recovery:** Legacy task formats are automatically migrated to new schema
 - **Version-safe localStorage keys (`_v1`)** for compatibility
 
-#### 🔔 Notifications System
+#### otifications System
 
 - Built a **center-screen animated notification manager** for all actions:
   - Create Task
   - Update/Edit Task
   - Delete Task
   - Overdue Alert
-  - ⚠️ Error (e.g. Missing title input)
+  - Error (e.g. Missing title input)
 - Custom emoji + color-coded designs for each notification type
 
-#### 🧠 Help & Usability
+#### Help & Usability
 
 - Added **Help Modal (Quick Guide)** accessible anytime
 - Added tooltips on every button for clarity
@@ -106,7 +109,7 @@ I personally implemented the entire frontend from scratch using React, TypeScrip
   - `Enter` → Add / Save task
   - `Escape` → Cancel edit
 
-#### 🎬 Visual Enhancements
+#### Visual Enhancements
 
 - Animated gradient background with slow movement
 - Floating glass orbs for subtle depth
@@ -203,25 +206,25 @@ curl -X POST http://localhost:5000/api/tasks \
   - Enable CORS for the frontend origin
 
 - Once both are deployed, update the link in the **Live Demo** section:
-  - Deployment Link: `https://basictaskmanager.vercel.app/` 
+  - Final Deployment Link: `https://basictaskmanager.vercel.app/` 
   - Vercel (Frontend): `https://basictaskmanager.vercel.app/` 
   - Render (Backend): `https://basic-task-manager-9f0x.onrender.com` 
 
 ---
 
-## 🧮 Features Summary
+## Features Summary
 
 | Category            | Features                                                    |
 | ------------------- | ----------------------------------------------------------- |
-| 🧩 **Core**         | Add, Edit, Delete, Toggle tasks                             |
-| 🧭 **Organization** | Task Filters (All / Active / Completed / Overdue)           |
-| 🕒 **Tracking**     | Due dates, overdue highlights, progress bar                 |
-| 🎨 **Design**       | Gradient UI, dark/light mode, responsive layout             |
-| 🔔 **Feedback**     | Animated notifications for all actions                      |
-| 💾 **Persistence**  | LocalStorage JSON + Export/Import backups                   |
-| 💬 **Help System**  | Interactive onboarding + Help modal                         |
-| 🪄 **Animations**   | Framer Motion transitions, hover effects, dynamic gradients |
-| 🧠 **Usability**    | Tooltips, keyboard shortcuts, inline edit mode              |
+| **Core**         | Add, Edit, Delete, Toggle tasks                             |
+| **Organization** | Task Filters (All / Active / Completed / Overdue)           |
+| **Tracking**     | Due dates, overdue highlights, progress bar                 |
+| **Design**       | Gradient UI, dark/light mode, responsive layout             |
+| **Feedback**     | Animated notifications for all actions                      |
+| **Persistence**  | LocalStorage JSON + Export/Import backups                   |
+| **Help System**  | Interactive onboarding + Help modal                         |
+| **Animations**   | Framer Motion transitions, hover effects, dynamic gradients |
+| **Usability**    | Tooltips, keyboard shortcuts, inline edit mode              |
 
 ---
 
@@ -239,12 +242,19 @@ curl -X POST http://localhost:5000/api/tasks \
 
 | Screen              | Preview                                      |
 | ------------------- | -------------------------------------------- |
-| 🏠 Welcome Screen   | ![Welcome](docs/screenshots/welcome.png)     |
-| 📋 Dashboard        | ![Dashboard](docs/screenshots/dashboard.png) |
-| ✍️ Add Task         | ![Add Task](docs/screenshots/add-task.png)   |
-| 🌗 Dark Mode        | ![Dark Mode](docs/screenshots/darkmode.png)  |
-| 🔍 Filters          | ![Filters](docs/screenshots/filters.png)     |
-| 📈 Progress Tracker | ![Progress](docs/screenshots/progress.png)   |
+| Welcome Screen      | ![Welcome](https://github.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/blob/2ccf899f65e1253010cfb1d691996bc6bf644067/Task%20Manager%20App/Screenshot%20of%20the%20app/Welcome%20screen.png)|
+| Dashboard           | ![Dashboard](https://github.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/blob/2ccf899f65e1253010cfb1d691996bc6bf644067/Task%20Manager%20App/Screenshot%20of%20the%20app/Dashborard.png) |
+| Help Box            | ![Help Box](https://github.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/blob/2ccf899f65e1253010cfb1d691996bc6bf644067/Task%20Manager%20App/Screenshot%20of%20the%20app/Help%20box.png)  |
+| Add Task            | ![Add Task](https://github.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/blob/2ccf899f65e1253010cfb1d691996bc6bf644067/Task%20Manager%20App/Screenshot%20of%20the%20app/Task%20Added.png)   |
+| Task Completion     | ![Task Completion](https://github.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/blob/2ccf899f65e1253010cfb1d691996bc6bf644067/Task%20Manager%20App/Screenshot%20of%20the%20app/Task%20Completed.png)|
+| Edit Task           | ![Edit Task](https://github.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/blob/2ccf899f65e1253010cfb1d691996bc6bf644067/Task%20Manager%20App/Screenshot%20of%20the%20app/edit%20the%20task.png)   |
+| Delete Task         | ![Delete Task](https://github.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/blob/48cc2865aa138ab8eb268d4a1ef540c239a526c9/Task%20Manager%20App/Screenshot%20of%20the%20app/delete.png)   |
+| Import Task(json)   | ![Import Task](https://github.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/blob/2ccf899f65e1253010cfb1d691996bc6bf644067/Task%20Manager%20App/Screenshot%20of%20the%20app/Import%20the%20task%20in%20dashboard.png)   |
+| Export Task(json)   | ![Export Task](https://github.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/blob/2ccf899f65e1253010cfb1d691996bc6bf644067/Task%20Manager%20App/Screenshot%20of%20the%20app/Export%20the%20task%20in%20json.png)   |
+| Dark Mode           | ![Dark Mode](https://github.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/blob/2ccf899f65e1253010cfb1d691996bc6bf644067/Task%20Manager%20App/Screenshot%20of%20the%20app/dark%20mode.png)  |
+| Light Mode          | ![Light Mode](https://github.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/blob/2ccf899f65e1253010cfb1d691996bc6bf644067/Task%20Manager%20App/Screenshot%20of%20the%20app/light%20mode.png) |
+| Filters             | ![Filters](https://github.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/blob/f0650eed6aa2d97e442cd218db66e41e79dc9d92/Task%20Manager%20App/Screenshot%20of%20the%20app/filters.png)     |
+| Progress Tracker    | ![Progress](https://github.com/coderiders22/PLC-Home-Coding-assignment-Oct-2025/blob/b3e223a198523ff01dc2d1c1f8d477f3ec03da2d/Task%20Manager%20App/Screenshot%20of%20the%20app/progress%20bar.png)   |
 
 ---
 
@@ -253,7 +263,7 @@ curl -X POST http://localhost:5000/api/tasks \
 **Developed by:** Manav Rai  
 **Institution:** Punjab Engineering College, Chandigarh  
 **Email:** [manavrai454@gmail.com](mailto:manavrai454@gmail.com)  
-**GitHub:** [github.com/manavrai454](https://github.com/manavrai454)
+**GitHub:** [github.com/manavrai454](https://github.com/coderiders22/)
 
 ---
 
