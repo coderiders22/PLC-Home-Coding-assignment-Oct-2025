@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: mini-project-manager-backend
+    env: docker
+    rootDir: backend
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+    healthCheckPath: /swagger/index.html
+
+  - type: web
+    name: mini-project-manager-frontend
+    env: docker
+    rootDir: frontend
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 8080
+    healthCheckPath: /
+
+

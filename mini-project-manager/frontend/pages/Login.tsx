@@ -103,7 +103,6 @@ export default function Login() {
               value={email}
               onChange={e => setEmail(e.target.value)}
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none bg-gray-50/50 dark:bg-white dark:text-slate-900 transition-all duration-200"
-              whileFocus="focus"
             />
           </motion.div>
 
@@ -118,7 +117,6 @@ export default function Login() {
               value={password}
               onChange={e => setPassword(e.target.value)}
               className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none bg-gray-50/50 dark:bg-white dark:text-slate-900 transition-all duration-200"
-              whileFocus="focus"
             />
             <button
               type="button"

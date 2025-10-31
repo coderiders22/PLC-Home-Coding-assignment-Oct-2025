@@ -93,8 +93,9 @@ Frontend `.env.local`
 ## Deployment Notes
 
 ### Live Demo Links
-- Backend (Render): https://your-render-backend.onrender.com  ← replace with your URL
-- Frontend (Vercel): https://your-vercel-frontend.vercel.app  ← replace with your URL
+- Deployment Link : https://your-vercel-frontend.vercel.app  
+- Backend (Render): https://mini-project-manager-7fsq.onrender.com 
+- Frontend (Vercel): https://your-vercel-frontend.vercel.app  
 
 ### Steps
 1) Deploy backend on Render

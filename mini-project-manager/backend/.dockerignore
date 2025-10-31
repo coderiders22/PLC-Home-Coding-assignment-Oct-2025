@@ -1,0 +1,10 @@
+bin/
+obj/
+.git/
+.gitignore
+**/*.user
+**/*.suo
+**/*.cache
+**/*.pdb
+**/*.log
+**/*.DS_Store

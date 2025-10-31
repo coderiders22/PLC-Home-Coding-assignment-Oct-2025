@@ -1,4 +1,4 @@
-import { Routes, Route, Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
 import { Moon, Sun, FolderKanban, LogOut, HelpCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";

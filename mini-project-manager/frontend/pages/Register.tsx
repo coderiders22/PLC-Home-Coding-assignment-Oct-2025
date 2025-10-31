@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { post } from "../src/api";
-import { saveToken } from "../src/auth";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, ArrowLeft, User } from "lucide-react";
