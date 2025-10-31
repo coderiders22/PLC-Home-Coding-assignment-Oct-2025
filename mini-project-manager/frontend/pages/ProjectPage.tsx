@@ -272,7 +272,7 @@ export default function ProjectPage() {
                         dependencies: [] as string[],
                       }))
                     };
-                    const res = await fetch(`${import.meta.env.VITE_API_BASE || 'http://localhost:5000'}/api/v1/projects/${id}/schedule`, {
+                    const res = await fetch(`${import.meta.env.VITE_API_BASE || 'https://mini-project-manager-7fsq.onrender.com'}/api/v1/projects/${id}/schedule`, {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify(parsed),
