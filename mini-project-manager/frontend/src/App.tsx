@@ -15,6 +15,7 @@ export default function App() {
   const token = getToken();
   const [dark, setDark] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -55,7 +56,8 @@ export default function App() {
             <FolderKanban className="text-indigo-600 dark:text-white" /> PlanCraft
           </Link>
 
-          <div className="flex items-center gap-4">
+            {/* Desktop actions */}
+            <div className="hidden sm:flex items-center gap-4">
             <button
               onClick={() => setDark(!dark)}
               className="p-2 rounded-full bg-white/30 dark:bg-slate-700/40 hover:scale-110 transition-transform"
@@ -73,34 +75,97 @@ export default function App() {
               <span className="hidden sm:inline">Help</span>
             </button>
 
-            {token ? (
-              <>
-                <Link
-                  to="/dashboard"
-                  className="font-medium hover:text-accent transition"
-                >
-                  Dashboard
-                </Link>
+
+              {token ? (
+                <>
+                  <Link
+                    to="/dashboard"
+                    className="font-medium hover:text-accent transition"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={() => {
+                      logout();
+                      navigate("/login", { replace: true });
+                    }}
+                    className="p-2 rounded-full bg-white/40 dark:bg-slate-700/40 text-red-500 hover:text-red-600 hover:scale-110 transition"
+                    aria-label="Logout"
+                    title="Logout"
+                  >
+                    <LogOut size={18} />
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="hover:text-accent">Login</Link>
+                  <Link to="/register" className="hover:text-accent">Register</Link>
+                </>
+              )}
+            </div>
+
+            {/* Mobile toggle */}
+            <button
+              className="sm:hidden inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/40 dark:bg-slate-700/40 text-slate-700 dark:text-slate-200"
+              onClick={() => setNavOpen((v) => !v)}
+              aria-expanded={navOpen}
+              aria-controls="mobile-nav"
+            >
+              <span className="text-sm font-medium">Menu</span>
+              {/* simple hamburger */}
+              <span className="relative block w-4 h-3">
+                <span className={`absolute inset-x-0 top-0 h-0.5 rounded bg-current transition-transform ${navOpen ? 'translate-y-1.5 rotate-45' : ''}`}></span>
+                <span className={`absolute inset-x-0 top-1.5 h-0.5 rounded bg-current transition-opacity ${navOpen ? 'opacity-0' : 'opacity-100'}`}></span>
+                <span className={`absolute inset-x-0 bottom-0 h-0.5 rounded bg-current transition-transform ${navOpen ? '-translate-y-1.5 -rotate-45' : ''}`}></span>
+              </span>
+            </button>
+          </div>
+
+          {/* Mobile menu */}
+          {navOpen && (
+            <div id="mobile-nav" className="sm:hidden mt-2 rounded-2xl border border-white/60 dark:border-slate-700 bg-white/80 dark:bg-slate-900/70 backdrop-blur-md shadow-sm ring-1 ring-indigo-100 px-4 py-3">
+              <div className="flex flex-col gap-3">
                 <button
-                  onClick={() => {
-                    logout();
-                    navigate("/login", { replace: true });
-                  }}
-                  className="p-2 rounded-full bg-white/40 dark:bg-slate-700/40 text-red-500 hover:text-red-600 hover:scale-110 transition"
-                  aria-label="Logout"
-                  title="Logout"
+                  onClick={() => setDark(!dark)}
+                  className="self-start px-3 py-2 rounded-lg bg-white/60 dark:bg-slate-700/50 text-sm"
                 >
-                  <LogOut size={18} />
+                  {dark ? 'Light mode' : 'Dark mode'}
                 </button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="hover:text-accent">Login</Link>
-                <Link to="/register" className="hover:text-accent">Register</Link>
-              </>
-            )}
-          </div>
-          </div>
+                <button
+                  onClick={() => setHelpOpen(true)}
+                  className="self-start px-3 py-2 rounded-lg bg-white/60 dark:bg-slate-700/50 text-sm text-red-600 dark:text-red-400"
+                >
+                  Help
+                </button>
+                {token ? (
+                  <>
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setNavOpen(false)}
+                      className="px-3 py-2 rounded-lg bg-indigo-50 dark:bg-slate-700/50 text-indigo-700 dark:text-slate-100"
+                    >
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setNavOpen(false);
+                        navigate("/login", { replace: true });
+                      }}
+                      className="px-3 py-2 rounded-lg bg-white/60 dark:bg-slate-700/50 text-red-600"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login" onClick={() => setNavOpen(false)} className="px-3 py-2 rounded-lg bg-white/60 dark:bg-slate-700/50">Login</Link>
+                    <Link to="/register" onClick={() => setNavOpen(false)} className="px-3 py-2 rounded-lg bg-white/60 dark:bg-slate-700/50">Register</Link>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
