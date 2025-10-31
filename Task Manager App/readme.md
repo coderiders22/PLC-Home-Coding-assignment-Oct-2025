@@ -268,8 +268,6 @@ curl -X POST http://localhost:5000/api/tasks \
 ---
 
 ## License
-
-Released under the **MIT License**  
 © 2025 **Manav Rai**. All rights reserved.
 
 ---
