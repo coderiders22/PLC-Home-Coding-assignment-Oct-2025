@@ -7,13 +7,16 @@ A single repository hosting two full‑stack projects built with .NET (C#) + Rea
 
 ---
 
-## 🔗 Live Demos
+## 🔗 Live Demos 
 
-- Project Hub (Landing): `https://plc-project-hub.vercel.app/`  
-- Task Manager (Frontend): `https://basictaskmanager.vercel.app/`
-- Task Manager (Backend): `https://basic-task-manager-9f0x.onrender.com`
-- Mini Project Manager (Frontend): `https://miniprojectmanager.vercel.app/`
-- Mini Project Manager (Backend): `https://mini-project-manager-7fsq.onrender com`
+- Project Hub (Landing): [plc-project-hub.vercel.app](https://plc-project-hub.vercel.app/)
+- Task Manager (Frontend): [basictaskmanager.vercel.app](https://basictaskmanager.vercel.app/)
+- Mini Project Manager (Frontend): [miniprojectmanager.vercel.app](https://miniprojectmanager.vercel.app/)
+
+Frontend apps are fully integrated with their backends. Use the links above to explore.  
+Optional direct API references (for testing): 
+- Task Manager (Backend): [basic-task-manager-9f0x.onrender.com](https://basic-task-manager-9f0x.onrender.com), 
+- Mini Project Manager (Backend): [mini-project-manager-7fsq.onrender.com](https://mini-project-manager-7fsq.onrender.com)
 
 > If any link is down, please check the subproject READMEs for updated deployment info.
 
