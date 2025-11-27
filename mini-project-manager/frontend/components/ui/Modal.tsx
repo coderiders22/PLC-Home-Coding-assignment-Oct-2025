@@ -7,13 +7,21 @@ export default function Modal({
   title,
   children,
   actions,
+  size = "md",
 }: {
   open: boolean;
   onClose: () => void;
   title?: string;
   children: React.ReactNode;
   actions?: React.ReactNode;
+  size?: "sm" | "md" | "lg" | "xl";
 }) {
+  const sizeClasses = {
+    sm: "max-w-sm",
+    md: "max-w-md",
+    lg: "max-w-2xl",
+    xl: "max-w-4xl",
+  };
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", onKey);
@@ -35,7 +43,7 @@ export default function Modal({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden"
+            className={`w-full ${sizeClasses[size]} bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden`}
             onClick={(e) => e.stopPropagation()}
           >
             {title && (
