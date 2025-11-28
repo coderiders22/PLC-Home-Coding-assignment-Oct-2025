@@ -1,6 +1,5 @@
 using MiniProjectManager.Models;
-using System.Security.Cryptography;
-using System.Text;
+using BCrypt.Net;
 
 namespace MiniProjectManager.Services;
 
@@ -13,7 +12,7 @@ public class UserService : IUserService
 
     public User Create(string email, string password)
     {
-        var user = new User { Email = email, PasswordHash = Hash(password) };
+        var user = new User { Email = email, PasswordHash = HashPassword(password) };
         _users.Add(user);
         return user;
     }
@@ -22,14 +21,29 @@ public class UserService : IUserService
     {
         user = GetByEmail(email);
         if (user == null) return false;
-        return user.PasswordHash == Hash(password);
+        return VerifyPassword(password, user.PasswordHash);
     }
 
-    private static string Hash(string input)
+    /// <summary>
+    /// Hashes a password using BCrypt with automatic salt generation
+    /// </summary>
+    private static string HashPassword(string password)
     {
-        // Simple SHA256 for demo (NOT recommended for real password storage)
-        using var sha = SHA256.Create();
-        var bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(input));
-        return Convert.ToBase64String(bytes);
+        return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 12);
+    }
+
+    /// <summary>
+    /// Verifies a password against a BCrypt hash
+    /// </summary>
+    private static bool VerifyPassword(string password, string hash)
+    {
+        try
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hash);
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
